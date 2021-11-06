@@ -72,4 +72,5 @@ def compute_cheapeast_containers_from_file(filename: str, price: int, print_outp
                                  row['Price'])
         containers.append(new_container)
 
-    return containers, compute_cheapest_containers(containers, price, print_output)
+    cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, price, print_output)
+    return containers, cheapest_price, cheapest_combinaison
