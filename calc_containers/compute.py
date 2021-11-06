@@ -92,6 +92,7 @@ def containers_from_file(filename: str):
                                  Range(row['MinCapacity'], row['MaxCapacity']),
                                  row['Price'])
         containers.append(new_container)
+    ## TODO: sort container by capacity
     return containers
 
 def compute_cheapeast_containers_from_file(filename: str, target_capacity: int):
@@ -101,13 +102,13 @@ def compute_cheapeast_containers_from_file(filename: str, target_capacity: int):
 
 def compute_cheapest_combinaisons_many_capacity_from_file(filename: str, max_capacity: int):
     containers = containers_from_file(filename)
-    return compute_cheapest_combinaisons_many_capacity(containers, max_capacity)
+    return (containers,) + compute_cheapest_combinaisons_many_capacity(containers, max_capacity)
 
 def compute_cheapest_combinaison_without_smallest_container_from_file(filename: str,
                                                                       target_capacity: int,
                                                                       max_capacity: int):
     containers = containers_from_file(filename)
-    return compute_cheapest_combinaison_without_smallest_container(containers, target_capacity, max_capacity)
+    return (containers,) + compute_cheapest_combinaison_without_smallest_container(containers, target_capacity, max_capacity)
 
 ## -- print result -- ##
 def result_to_string(containers: List[Container],

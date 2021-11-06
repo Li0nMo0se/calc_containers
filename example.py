@@ -17,7 +17,8 @@ print(result_to_string(containers, target_capacity, cheapest_price, cheapest_com
 
 print("---------------------------------------")
 print("Compute cheapeast combinaison without smallest container")
-target_price, lower_price, higher_price = compute_cheapest_combinaison_without_smallest_container_from_file(file, target_capacity, max_capacity)
+containers, target_price, lower_price, higher_price =\
+    compute_cheapest_combinaison_without_smallest_container_from_file(file, target_capacity, max_capacity)
 print(result_to_string(containers, target_price[0], target_price[1], target_price[2]))
 print(result_to_string(containers, lower_price[0], lower_price[1], lower_price[2]))
 print(result_to_string(containers, higher_price[0], higher_price[1], higher_price[2]))
