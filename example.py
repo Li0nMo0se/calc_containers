@@ -1,4 +1,7 @@
-from calc_containers.compute import compute_cheapeast_containers_from_file
+from calc_containers.compute import compute_cheapeast_containers_from_file, result_to_string
 
+target_capacity = 95
+containers, cheapest_price, cheapest_combinaison =\
+    compute_cheapeast_containers_from_file("template.xlsx", target_capacity)
 
-compute_cheapeast_containers_from_file("template.xlsx", 95, print_output=True)
+print(result_to_string(containers, target_capacity, cheapest_price, cheapest_combinaison))

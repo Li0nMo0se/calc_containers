@@ -49,20 +49,14 @@ def get_cheapest_combinaison(prices: List[int], combinaisons: List[List[int]]) -
     min_index_price = np.argmin(prices)
     return prices[min_index_price], combinaisons[min_index_price]
 
-def compute_cheapest_containers(containers: List[Container], target_capacity: int, print_output: bool=False):
+def compute_cheapest_containers(containers: List[Container], target_capacity: int):
     combinaisons = get_all_combinaison(containers, target_capacity)
     prices = get_combinaison_prices(combinaisons, containers)
     cheapest_price, cheapest_combinaison = get_cheapest_combinaison(prices, combinaisons)
 
-    if print_output:
-        print(f"The cheapest containers for the capacity of {target_capacity} is")
-        for i in range(len(containers)):
-            print(f"* {containers[i].name}: {cheapest_combinaison[i]}")
-        print(f"The cost will be {cheapest_price}")
-
     return cheapest_price, cheapest_combinaison
 
-def compute_cheapeast_containers_from_file(filename: str, price: int, print_output: bool=False):
+def compute_cheapeast_containers_from_file(filename: str, price: int):
     df = pd.read_excel(filename)
 
     containers = []
@@ -72,5 +66,15 @@ def compute_cheapeast_containers_from_file(filename: str, price: int, print_outp
                                  row['Price'])
         containers.append(new_container)
 
-    cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, price, print_output)
+    cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, price)
     return containers, cheapest_price, cheapest_combinaison
+
+def result_to_string(containers: List[Container],
+                     target_capacity: int,
+                     cheapest_price: int,
+                     cheapest_combinaison: List[int]):
+    str = f"The cheapest containers for the capacity of {target_capacity} is\n"
+    for i in range(len(containers)):
+        str += f"* {containers[i].name}: {cheapest_combinaison[i]}\n"
+    str += f"The cost will be {cheapest_price}"
+    return str
