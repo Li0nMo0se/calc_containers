@@ -34,7 +34,7 @@ def get_all_combinaison(containers: List[Container], target_capacity: int) -> Li
     return __get_all_combinaison(containers, Range(target_capacity, target_capacity))
 
 
-def get_combinaison_prices(combinaisons, containers):
+def get_combinaison_prices(combinaisons: List[List[int]], containers: List[Container]):
     def get_price(combinaison, containers):
         total = 0
         for i in range(len(combinaison)):
@@ -56,7 +56,34 @@ def compute_cheapest_containers(containers: List[Container], target_capacity: in
 
     return cheapest_price, cheapest_combinaison
 
-def compute_cheapeast_containers_from_file(filename: str, price: int):
+def compute_cheapest_combinaisons_many_capacity(containers: List[Container], max_capacity: int):
+    prices = [(0, 0, [0, 0, 0, 0])]
+    for capacity in range(1, max_capacity):
+        cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, capacity)
+        prices.append((capacity, cheapest_price, cheapest_combinaison))
+
+    return prices
+
+def compute_cheapest_combinaison_without_smallest_container(containers: List[Container],
+                                                            target_capacity: int,
+                                                            max_capacity: int):
+    assert target_capacity < max_capacity
+    prices = compute_cheapest_combinaisons_many_capacity(containers, max_capacity)
+
+    # Find the closest cheapest combinaison without LCL container
+    for new_capacity in range(target_capacity + 1, max_capacity):
+        if prices[new_capacity][2][-1] == 0:
+            break
+
+    for new_capacity2 in range(target_capacity - 1, 0, -1):
+        if prices[new_capacity2][2][-1] == 0:
+            break
+
+    return prices[target_capacity], prices[new_capacity], prices[new_capacity2]
+
+
+## -- from file section -- ##
+def containers_from_file(filename: str):
     df = pd.read_excel(filename)
 
     containers = []
@@ -65,10 +92,24 @@ def compute_cheapeast_containers_from_file(filename: str, price: int):
                                  Range(row['MinCapacity'], row['MaxCapacity']),
                                  row['Price'])
         containers.append(new_container)
+    return containers
 
-    cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, price)
+def compute_cheapeast_containers_from_file(filename: str, target_capacity: int):
+    containers = containers_from_file(filename)
+    cheapest_price, cheapest_combinaison = compute_cheapest_containers(containers, target_capacity)
     return containers, cheapest_price, cheapest_combinaison
 
+def compute_cheapest_combinaisons_many_capacity_from_file(filename: str, max_capacity: int):
+    containers = containers_from_file(filename)
+    return compute_cheapest_combinaisons_many_capacity(containers, max_capacity)
+
+def compute_cheapest_combinaison_without_smallest_container_from_file(filename: str,
+                                                                      target_capacity: int,
+                                                                      max_capacity: int):
+    containers = containers_from_file(filename)
+    return compute_cheapest_combinaison_without_smallest_container(containers, target_capacity, max_capacity)
+
+## -- print result -- ##
 def result_to_string(containers: List[Container],
                      target_capacity: int,
                      cheapest_price: int,
